@@ -1,9 +1,9 @@
-package pl.zaitis.shop.admin.service;
+package pl.zaitis.shop.admin.product.service;
 
 import com.github.slugify.Slugify;
 import org.apache.commons.io.FilenameUtils;
 
-class UploadedFilesNameUtils {
+public class UploadedFilesNameUtils {
     public static String slugifyFileName(String filename) {
 
         String name = FilenameUtils.getBaseName(filename);

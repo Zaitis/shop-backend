@@ -1,4 +1,4 @@
-package pl.zaitis.shop.admin.model;
+package pl.zaitis.shop.admin.product.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

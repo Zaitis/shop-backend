@@ -1,8 +1,8 @@
 package pl.zaitis.shop.admin.service;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import pl.zaitis.shop.admin.product.service.UploadedFilesNameUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 

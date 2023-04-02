@@ -1,12 +1,11 @@
-package pl.zaitis.shop.admin.service;
+package pl.zaitis.shop.admin.product.service;
 
 import org.apache.commons.io.FilenameUtils;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
-class ExistingFileRenameUtils {
+public class ExistingFileRenameUtils {
 
     public static String renameIfExists(Path uploadDir, String fileName) {
         if(Files.exists(uploadDir.resolve(fileName))) {

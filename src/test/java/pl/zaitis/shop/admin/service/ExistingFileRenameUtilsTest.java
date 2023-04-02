@@ -2,6 +2,7 @@ package pl.zaitis.shop.admin.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import pl.zaitis.shop.admin.product.service.ExistingFileRenameUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ExistingFileRenameUtilsTest {
 
     @Test
-    void shouldNotRenameFile(@TempDir Path tempDir) throws IOException {
+    void shouldNotRenameFile(@TempDir Path tempDir) {
         String newName = ExistingFileRenameUtils.renameIfExists(tempDir, "test.png");
         assertEquals("test.png", newName);
     }

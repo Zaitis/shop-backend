@@ -1,4 +1,4 @@
-package pl.zaitis.shop.admin.controller;
+package pl.zaitis.shop.admin.product.controller;
 
 import com.github.slugify.Slugify;
 import jakarta.validation.Valid;
@@ -10,11 +10,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.zaitis.shop.admin.dto.AdminProductDto;
-import pl.zaitis.shop.admin.dto.UploadResponse;
-import pl.zaitis.shop.admin.model.AdminProduct;
-import pl.zaitis.shop.admin.service.AdminProductImageService;
-import pl.zaitis.shop.admin.service.AdminProductService;
+import pl.zaitis.shop.admin.product.dto.AdminProductDto;
+import pl.zaitis.shop.admin.product.dto.UploadResponse;
+import pl.zaitis.shop.admin.product.model.AdminProduct;
+import pl.zaitis.shop.admin.product.service.AdminProductService;
+import pl.zaitis.shop.admin.product.service.AdminProductImageService;
 
 import java.io.IOException;
 import java.io.InputStream;
