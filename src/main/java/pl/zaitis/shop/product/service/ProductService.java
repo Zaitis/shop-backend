@@ -12,7 +12,6 @@ import pl.zaitis.shop.product.repository.ProductRepository;
 @RequiredArgsConstructor
 public class ProductService {
 
-
     private final ProductRepository productRepository;
 
     public Page<Product> getProduct(Pageable pageable){
