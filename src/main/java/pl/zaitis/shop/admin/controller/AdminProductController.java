@@ -1,15 +1,13 @@
 package pl.zaitis.shop.admin.controller;
 
+import com.github.slugify.Slugify;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.zaitis.shop.admin.dto.AdminProductDto;
@@ -20,10 +18,8 @@ import pl.zaitis.shop.admin.service.AdminProductService;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @RestController
 @RequiredArgsConstructor
@@ -73,6 +69,7 @@ public class AdminProductController {
     @GetMapping("/data/productImage/{filename}")
     public ResponseEntity<Resource> serveFiles(@PathVariable String filename) throws IOException {
        Resource resource =adminProductImageService.serveFiles(filename);
+
        return ResponseEntity.ok()
                .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(Path.of(filename)))
                .body(resource);
@@ -83,11 +80,23 @@ public class AdminProductController {
                 .id(id)
                 .name(adminProductDto.getName())
                 .description(adminProductDto.getDescription())
+                .fullDescription(adminProductDto.getFullDescription())
                 .category(adminProductDto.getCategory())
                 .price(adminProductDto.getPrice())
                 .currency(adminProductDto.getCurrency())
                 .image(adminProductDto.getImage())
+                .slug(slugifySlug(adminProductDto.getSlug()))
                 .build();
+    }
+
+    private String slugifySlug(String slug) {
+        final Slugify slg = Slugify.builder()
+                .customReplacement("_", "-")
+                .build();
+
+        return slg.slugify(slug);
+
+
     }
 
 }

@@ -21,4 +21,8 @@ public class ProductService {
     public Product addProduct(Product product){
         return productRepository.save(product);
     }
+
+    public Product getProductBySlug(String slug) {
+        return productRepository.findBySlug(slug).orElseThrow();
+        }
 }

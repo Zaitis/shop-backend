@@ -24,6 +24,9 @@ public class Product {
     private String name;
     private String category;
     private String description;
+    private String fullDescription;
     private BigDecimal price;
     private String currency;
+    private String image;
+    private String slug;
 }
