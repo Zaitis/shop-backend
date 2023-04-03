@@ -1,9 +1,9 @@
-package pl.zaitis.shop.product.repository;
+package pl.zaitis.shop.common.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.zaitis.shop.product.model.Product;
+import pl.zaitis.shop.common.model.Product;
 
 import java.util.Optional;
 

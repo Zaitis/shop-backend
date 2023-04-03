@@ -1,4 +1,4 @@
-package pl.zaitis.shop.product.model;
+package pl.zaitis.shop.common.model;
 
 
 
@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import pl.zaitis.shop.review.model.Review;
 
 import java.math.BigDecimal;
 import java.util.List;

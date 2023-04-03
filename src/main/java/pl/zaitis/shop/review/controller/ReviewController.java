@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import org.springframework.web.bind.annotation.*;
-import pl.zaitis.shop.review.model.Review;
+import pl.zaitis.shop.common.model.Review;
 import pl.zaitis.shop.review.service.ReviewService;
 
 @RestController

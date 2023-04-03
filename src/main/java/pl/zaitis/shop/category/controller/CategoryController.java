@@ -7,8 +7,8 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import pl.zaitis.shop.category.model.Category;
-import pl.zaitis.shop.category.model.CategoryProductsDto;
+import pl.zaitis.shop.common.model.Category;
+import pl.zaitis.shop.category.dto.CategoryProductsDto;
 import pl.zaitis.shop.category.service.CategoryService;
 
 

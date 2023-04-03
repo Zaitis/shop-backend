@@ -1,4 +1,4 @@
-package pl.zaitis.shop.product.contoller.dto;
+package pl.zaitis.shop.common.dto;
 
 import lombok.Builder;
 import lombok.Getter;

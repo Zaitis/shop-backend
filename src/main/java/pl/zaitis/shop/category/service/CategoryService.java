@@ -7,12 +7,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.zaitis.shop.category.model.Category;
-import pl.zaitis.shop.category.model.CategoryProductsDto;
+import pl.zaitis.shop.common.model.Category;
+import pl.zaitis.shop.category.dto.CategoryProductsDto;
 import pl.zaitis.shop.category.repository.CategoryRepository;
-import pl.zaitis.shop.product.contoller.dto.ProductListDto;
-import pl.zaitis.shop.product.model.Product;
-import pl.zaitis.shop.product.repository.ProductRepository;
+import pl.zaitis.shop.common.dto.ProductListDto;
+import pl.zaitis.shop.common.model.Product;
+import pl.zaitis.shop.common.repository.ProductRepository;
 
 import java.util.List;
 

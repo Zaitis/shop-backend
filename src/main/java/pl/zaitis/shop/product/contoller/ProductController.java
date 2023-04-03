@@ -10,8 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.zaitis.shop.product.contoller.dto.ProductListDto;
-import pl.zaitis.shop.product.model.Product;
+import pl.zaitis.shop.common.dto.ProductListDto;
+import pl.zaitis.shop.common.model.Product;
 import pl.zaitis.shop.product.service.ProductService;
 
 import java.util.List;

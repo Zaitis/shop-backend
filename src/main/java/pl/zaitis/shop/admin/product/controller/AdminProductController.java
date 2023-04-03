@@ -1,6 +1,6 @@
 package pl.zaitis.shop.admin.product.controller;
 
-import com.github.slugify.Slugify;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static pl.zaitis.shop.admin.common.utils.SlugfyUtils.slugifySlugName;
 
 @RestController
 @RequiredArgsConstructor
@@ -85,18 +87,10 @@ public class AdminProductController {
                 .price(adminProductDto.getPrice())
                 .currency(adminProductDto.getCurrency())
                 .image(adminProductDto.getImage())
-                .slug(slugifySlug(adminProductDto.getSlug()))
+                .slug(slugifySlugName(adminProductDto.getSlug()))
                 .build();
     }
 
-    private String slugifySlug(String slug) {
-        final Slugify slg = Slugify.builder()
-                .customReplacement("_", "-")
-                .build();
 
-        return slg.slugify(slug);
-
-
-    }
 
 }

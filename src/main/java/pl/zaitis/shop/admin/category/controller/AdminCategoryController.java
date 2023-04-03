@@ -1,6 +1,6 @@
 package pl.zaitis.shop.admin.category.controller;
 
-import com.github.slugify.Slugify;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.zaitis.shop.admin.category.controller.dto.AdminCategoryDto;
@@ -8,6 +8,8 @@ import pl.zaitis.shop.admin.category.model.AdminCategory;
 import pl.zaitis.shop.admin.category.service.AdminCategoryService;
 
 import java.util.List;
+
+import static pl.zaitis.shop.admin.common.utils.SlugfyUtils.slugifySlugName;
 
 @RestController
 @RequestMapping("/admin/categories")
@@ -48,16 +50,11 @@ public class AdminCategoryController {
                 .id(id)
                 .name(adminCategoryDto.getName())
                 .description(adminCategoryDto.getDescription())
-                .slug(slugifyCategoryName(adminCategoryDto.getSlug()))
+                .slug(slugifySlugName(adminCategoryDto.getSlug()))
                 .build();
     }
 
-    private String slugifyCategoryName(String slug) {
-        Slugify slg = Slugify.builder()
-                .customReplacement("_", "-")
-                .build();
-        return  slg.slugify(slug);
-    }
+
 
 
 }

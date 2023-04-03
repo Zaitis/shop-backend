@@ -1,4 +1,4 @@
-package pl.zaitis.shop.review.model;
+package pl.zaitis.shop.common.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
