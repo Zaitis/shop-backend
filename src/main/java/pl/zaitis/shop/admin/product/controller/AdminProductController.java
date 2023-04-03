@@ -10,8 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.zaitis.shop.admin.product.dto.AdminProductDto;
-import pl.zaitis.shop.admin.product.dto.UploadResponse;
+import pl.zaitis.shop.admin.product.controller.dto.AdminProductDto;
+import pl.zaitis.shop.admin.product.controller.dto.UploadResponse;
 import pl.zaitis.shop.admin.product.model.AdminProduct;
 import pl.zaitis.shop.admin.product.service.AdminProductService;
 import pl.zaitis.shop.admin.product.service.AdminProductImageService;
@@ -81,7 +81,7 @@ public class AdminProductController {
                 .name(adminProductDto.getName())
                 .description(adminProductDto.getDescription())
                 .fullDescription(adminProductDto.getFullDescription())
-                .category(adminProductDto.getCategory())
+                .categoryId(adminProductDto.getCategoryId())
                 .price(adminProductDto.getPrice())
                 .currency(adminProductDto.getCurrency())
                 .image(adminProductDto.getImage())

@@ -1,4 +1,4 @@
-package pl.zaitis.shop.admin.product.dto;
+package pl.zaitis.shop.admin.product.controller.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -8,15 +8,15 @@ import org.hibernate.validator.constraints.Length;
 import pl.zaitis.shop.admin.product.model.AdminProductCurrency;
 
 import java.math.BigDecimal;
+
 @Getter
 public class AdminProductDto {
 
     @NotBlank
     @Length(min = 4)
     private String name;
-    @NotBlank
-    @Length(min = 4)
-    private String category;
+    @NotNull
+    private Long categoryId;
     @NotBlank
     @Length(min = 4)
     private String description;

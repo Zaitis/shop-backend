@@ -1,8 +1,7 @@
-package pl.zaitis.shop.admin.service;
+package pl.zaitis.shop.admin.product.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import pl.zaitis.shop.admin.product.service.ExistingFileRenameUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
