@@ -1,4 +1,4 @@
-package pl.zaitis.shop.cart.model;
+package pl.zaitis.shop.common.model;
 
 
 import jakarta.persistence.*;

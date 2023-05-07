@@ -1,8 +1,8 @@
-package pl.zaitis.shop.cart.model;
+package pl.zaitis.shop.common.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import pl.zaitis.shop.common.model.Product;
+
 
 @Entity
 @Getter

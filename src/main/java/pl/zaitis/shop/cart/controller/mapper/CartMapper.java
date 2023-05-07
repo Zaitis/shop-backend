@@ -5,8 +5,8 @@ import pl.zaitis.shop.cart.controller.dto.CartSummaryDto;
 import pl.zaitis.shop.cart.controller.dto.CartSummaryItemDto;
 import pl.zaitis.shop.cart.controller.dto.ProductDto;
 import pl.zaitis.shop.cart.controller.dto.SummaryDto;
-import pl.zaitis.shop.cart.model.Cart;
-import pl.zaitis.shop.cart.model.CartItem;
+import pl.zaitis.shop.common.model.Cart;
+import pl.zaitis.shop.common.model.CartItem;
 
 import pl.zaitis.shop.common.model.Product;
 

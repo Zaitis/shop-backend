@@ -3,7 +3,7 @@ package pl.zaitis.shop.cart.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.zaitis.shop.cart.repository.CartItemRepository;
+import pl.zaitis.shop.common.repository.CartItemRepository;
 
 
 @Service

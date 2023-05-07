@@ -4,10 +4,10 @@ package pl.zaitis.shop.cart.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.zaitis.shop.cart.model.Cart;
-import pl.zaitis.shop.cart.model.CartItem;
+import pl.zaitis.shop.common.model.Cart;
+import pl.zaitis.shop.common.model.CartItem;
 import pl.zaitis.shop.cart.model.dto.CartProductDto;
-import pl.zaitis.shop.cart.repository.CartRepository;
+import pl.zaitis.shop.common.repository.CartRepository;
 import pl.zaitis.shop.common.model.Product;
 import pl.zaitis.shop.common.repository.ProductRepository;
 
