@@ -14,6 +14,7 @@ import static pl.zaitis.shop.admin.common.utils.SlugfyUtils.slugifySlugName;
 @RestController
 @RequestMapping("/admin/categories")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AdminCategoryController {
 
     private final AdminCategoryService adminCategoryService;

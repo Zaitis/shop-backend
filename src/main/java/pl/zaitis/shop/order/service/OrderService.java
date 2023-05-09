@@ -3,6 +3,7 @@ package pl.zaitis.shop.order.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.zaitis.shop.common.mail.EmailSimpleService;
 import pl.zaitis.shop.common.model.Cart;
 import pl.zaitis.shop.common.model.CartItem;
 import pl.zaitis.shop.common.repository.CartItemRepository;
@@ -10,11 +11,13 @@ import pl.zaitis.shop.common.repository.CartRepository;
 import pl.zaitis.shop.order.model.Order;
 import pl.zaitis.shop.order.model.OrderRow;
 import pl.zaitis.shop.order.model.OrderStatus;
+import pl.zaitis.shop.order.model.Payment;
 import pl.zaitis.shop.order.model.Shipment;
 import pl.zaitis.shop.order.model.dto.OrderDto;
 import pl.zaitis.shop.order.model.dto.OrderSummary;
 import pl.zaitis.shop.order.repository.OrderRepository;
 import pl.zaitis.shop.order.repository.OrderRowRepository;
+import pl.zaitis.shop.order.repository.PaymentRepository;
 import pl.zaitis.shop.order.repository.ShipmentRepository;
 
 import java.math.BigDecimal;
@@ -30,11 +33,14 @@ public class OrderService {
     private final OrderRowRepository orderRowRepository;
     private final CartItemRepository cartItemRepository;
     private final ShipmentRepository shipmentRepository;
+    private final PaymentRepository paymentRepository;
+    private final EmailSimpleService emailService;
 
     @Transactional
     public OrderSummary placeOrder(OrderDto orderDto) {
         Cart cart= cartRepository.findById(orderDto.getCartId()).orElseThrow();
         Shipment shipment =shipmentRepository.findById(orderDto.getShipmentId()).orElseThrow();
+        Payment payment =paymentRepository.findById(orderDto.getPaymentId()).orElseThrow();
 
         Order order = Order.builder()
                 .firstname(orderDto.getFirstname())
@@ -47,6 +53,7 @@ public class OrderService {
                 .placeDate(LocalDateTime.now())
                 .orderStatus(OrderStatus.NEW)
                 .grossValue(calculateGrossValue(cart.getItems(), shipment))
+                .payment(payment)
                 .build();
         Order newOrder = orderRepository.save(order);
 
@@ -54,12 +61,18 @@ public class OrderService {
 
         cartItemRepository.deleteByCartId(orderDto.getCartId());
         cartRepository.deleteCartById(orderDto.getCartId());
+        emailService.send(order.getEmail(),"test", createEmailMessage(order));
         return OrderSummary.builder()
                 .id(newOrder.getId())
                 .placeDate(newOrder.getPlaceDate())
                 .status(newOrder.getOrderStatus())
                 .grossValue(newOrder.getGrossValue())
+                .payment(payment)
                 .build();
+    }
+
+    private String createEmailMessage(Order order){
+        return "Your order with id: "+ order.getId()+" will be send.";
     }
 
     private BigDecimal calculateGrossValue(List<CartItem> items, Shipment shipment) {

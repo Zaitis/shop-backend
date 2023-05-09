@@ -30,6 +30,7 @@ public class AdminProductController {
     private final AdminProductService adminProductService;
     private final AdminProductImageService adminProductImageService;
 
+
     @GetMapping("/admin/products")
     public ResponseEntity<Page<AdminProduct>> getProducts(Pageable pageable) {
         return ResponseEntity.ok(adminProductService.getProducts(pageable));
