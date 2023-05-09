@@ -1,8 +1,8 @@
 
 # Demo shop
 
-Demo shop is demo e-commerce shop. You can check and test this project at 
-https://zaitis.alwaysdata.net/z
+Demo shop is demo e-commerce shop. You can check and test this project in swagger at 
+http://zaitis.alwaysdata.net/swagger-ui/index.html
 ## Tech Stack
 
 
