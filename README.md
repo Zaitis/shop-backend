@@ -1,202 +1,36 @@
 
 # Demo shop
 
-Demo shop is demo e-commerce shop. You can check and test this project in swagger at 
+This project is demo e-commerce shop. I am still developing, this Spring Boot aplication.   You can check and test this project on swagger at 
 http://zaitis.alwaysdata.net/swagger-ui/index.html
 ## Tech Stack
 
-
-
-
-## API Reference
-
-
-#### Get all categories
-
-```http
-  GET /admin/categories
-```
-
-
-#### Get category with id
-
-```http
-  GET /admin/categories${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-#### Insert new category 
-
-```http
-  POST /admin/categories
-```
-
-#### Request body
-
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `name`    | `string` | **Required**. Category name       |
-| `desc`    | `string` | Category description              | 
-| `slug`    | `string` | **Required**. Category slug       |
-
-#### Update category with id
-
-```http
-  PUT /admin/categories${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-#### Delete category with id
-
-```http
-  DELETE /admin/categories${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-
-#### Get all products
-
-```http
-  GET /admin/products
-```
-
-
-#### Get product with id
-
-```http
-  GET /admin/products${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-#### Insert new product 
-
-```http
-  POST /admin/products
-```
-
-#### Request body
-
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `name`    | `string` | **Required**. Product name       |
-| `categoryId`    | `Long` | **Required**. Category Id              | 
-| `description`    | `string` | **Required**. Product description       |
-| `fullDescription`    | `string` |  Longer version product description     |
-| `price`    | `string` | **Required**. Product price       |
-| `currency`    | `ENUM` |  One of currency      |
-| `image`    | `string` | image name for product     |
-| `slug`    | `string` | **Required**. Product slug       |
-
-#### Update product with id
-
-```http
-  PUT /admin/products${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-#### Delete product with id
-
-```http
-  DELETE /admin/products${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-
-#### Upload image to server
-
-```http
-  POST /admin/products/upload
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `file`      | `MultipartFile` | **Required**. Upload image on server and back slug name of this image. |
-
-
-#### Get image from server with name
-
-```http
-  GET /data/productImage/{filename}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `filename`      | `string` | **Required**. Slug image name |
-
-#### Get category with id
-
-```http
-  GET /admin/reviews
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-
-#### Update review with id
-
-```http
-  PUT /admin/reviews/{id}/moderate
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Change review on visible with id. |
-
-#### Delete review with id
-
-```http
-  DELETE /admin/reviews/{id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-
+ * Java 17
+ * Spring Boot 3.0.4
+ * Hibernate/Jpa
+ * Hibernate Validator
+ * Maven
+ * MySQL
+ * Liquibase
+ * Git
+ * JUnit
+ * Lombok
+ * Swagger
+ * Slugify
 
 
 
 ## Feedback
 
-If you have any feedback, please reach me at krzysztof@painm.pl
+If you have any question or feedback, please reach me at krzysztof@painm.pl
 
 
-## Installation
+## Lessons Learned
 
 Not implemented yet...
 
-```bash
-  Not implemented yet...
-```
-    
-## Lessons Learned
 
-What did you learn while building this project? What challenges did you face and how did you overcome them?
-
-
-## Roadmap
+## ToDo list:
 
 - Not implemented yet...
 
@@ -205,38 +39,37 @@ What did you learn while building this project? What challenges did you face and
 
 ## Run Locally
 
-# Not implemented yet...
-
 ```bash
   git clone https://github.com/Zaitis/shop-backend
 ```
 
-Go to the project directory
+Open project in IDE. (InteliJ)
+
+
+Go to:
 
 ```bash
-  cd shop-backend
+  src\main\java\pl\zaitis\shop
 ```
 
-Install dependencies
+Run 
 
 ```bash
-  mvn clean install
+  ShopApplication.main()
 ```
 
-Go to the target directory
+Open Browser, the application will be start:
 
 ```bash
-  cd target
+  https://localhost:8080
 ```
 
-Start the server
+If you want run and connect database you should make new locally database and change
+creditials in application.propertis: DATABASE_NAME, USERNAME, PASSWORD
+
 
 ```bash
-  npm run start
+  spring.datasource.url=jdbc:mysql://localhost:3306/DATABASE_NAME?useUnicode=true&serverTimezone=UTC
+spring.datasource.username= USERNAME
+spring.datasource.password= PASSWORD
 ```
-
-
-## Screenshots
-
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-
