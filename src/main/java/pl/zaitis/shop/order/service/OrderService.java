@@ -3,14 +3,11 @@ package pl.zaitis.shop.order.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.zaitis.shop.common.mail.EmailSimpleService;
+import pl.zaitis.shop.common.mail.EmailClientService;
 import pl.zaitis.shop.common.model.Cart;
-import pl.zaitis.shop.common.model.CartItem;
 import pl.zaitis.shop.common.repository.CartItemRepository;
 import pl.zaitis.shop.common.repository.CartRepository;
 import pl.zaitis.shop.order.model.Order;
-import pl.zaitis.shop.order.model.OrderRow;
-import pl.zaitis.shop.order.model.OrderStatus;
 import pl.zaitis.shop.order.model.Payment;
 import pl.zaitis.shop.order.model.Shipment;
 import pl.zaitis.shop.order.model.dto.OrderDto;
@@ -20,9 +17,10 @@ import pl.zaitis.shop.order.repository.OrderRowRepository;
 import pl.zaitis.shop.order.repository.PaymentRepository;
 import pl.zaitis.shop.order.repository.ShipmentRepository;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
+import static pl.zaitis.shop.order.service.mapper.OrderMapper.createdNewOrder;
+import static pl.zaitis.shop.order.service.mapper.OrderMapper.createdOrderSummary;
+import static pl.zaitis.shop.order.service.mapper.OrderMapper.mapToOrderRow;
+import static pl.zaitis.shop.order.service.mapper.OrderMapper.mapToOrderRowWithQuantity;
 
 @Service
 @RequiredArgsConstructor
@@ -34,53 +32,30 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final ShipmentRepository shipmentRepository;
     private final PaymentRepository paymentRepository;
-    private final EmailSimpleService emailService;
+    private final EmailClientService emailClientService;
 
     @Transactional
     public OrderSummary placeOrder(OrderDto orderDto) {
         Cart cart= cartRepository.findById(orderDto.getCartId()).orElseThrow();
         Shipment shipment =shipmentRepository.findById(orderDto.getShipmentId()).orElseThrow();
         Payment payment =paymentRepository.findById(orderDto.getPaymentId()).orElseThrow();
-
-        Order order = Order.builder()
-                .firstname(orderDto.getFirstname())
-                .lastname(orderDto.getLastname())
-                .street(orderDto.getStreet())
-                .zipcode(orderDto.getZipcode())
-                .city(orderDto.getCity())
-                .email(orderDto.getEmail())
-                .phone(orderDto.getPhone())
-                .placeDate(LocalDateTime.now())
-                .orderStatus(OrderStatus.NEW)
-                .grossValue(calculateGrossValue(cart.getItems(), shipment))
-                .payment(payment)
-                .build();
-        Order newOrder = orderRepository.save(order);
-
+        Order newOrder = orderRepository.save(createdNewOrder(orderDto, cart, shipment, payment));
         saveOrderRows(cart, newOrder.getId(), shipment);
+        clearOrderCart(orderDto);
+        emailClientService.getUInstance()
+                .send(newOrder.getEmail(),
+                "Your order was been created",
+                createEmailMessage(newOrder));
+        return createdOrderSummary(payment, newOrder);
+    }
 
+    private void clearOrderCart(OrderDto orderDto) {
         cartItemRepository.deleteByCartId(orderDto.getCartId());
         cartRepository.deleteCartById(orderDto.getCartId());
-        emailService.send(order.getEmail(),"test", createEmailMessage(order));
-        return OrderSummary.builder()
-                .id(newOrder.getId())
-                .placeDate(newOrder.getPlaceDate())
-                .status(newOrder.getOrderStatus())
-                .grossValue(newOrder.getGrossValue())
-                .payment(payment)
-                .build();
     }
 
     private String createEmailMessage(Order order){
         return "Your order with id: "+ order.getId()+" will be send.";
-    }
-
-    private BigDecimal calculateGrossValue(List<CartItem> items, Shipment shipment) {
-        return items.stream()
-                .map(cartItem -> cartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
-                .reduce(BigDecimal::add)
-                .orElse(BigDecimal.ZERO)
-                .add(shipment.getPrice());
     }
 
     private void saveOrderRows(Cart cart, Long id, Shipment shipment) {
@@ -89,22 +64,12 @@ public class OrderService {
     }
 
     private void saveShipmentRow(Long id, Shipment shipment) {
-        orderRowRepository.save(OrderRow.builder()
-                        .quantity(1)
-                        .price(shipment.getPrice())
-                        .shipmentId(shipment.getId())
-                        .orderId(id)
-                        .build());
+        orderRowRepository.save(mapToOrderRow(id, shipment));
     }
 
     private void saveProductRows(Cart cart, Long id) {
         cart.getItems().stream()
-                .map(cartItem -> OrderRow.builder()
-                        .quantity(cartItem.getQuantity())
-                        .productId(cartItem.getProduct().getId())
-                        .price(cartItem.getProduct().getPrice())
-                        .orderId(id)
-                        .build())
+                .map(cartItem -> mapToOrderRowWithQuantity(id, cartItem))
                 .peek(orderRowRepository::save)
                 .toList();
     }

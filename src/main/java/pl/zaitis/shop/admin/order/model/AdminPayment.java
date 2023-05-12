@@ -1,4 +1,4 @@
-package pl.zaitis.shop.order.model;
+package pl.zaitis.shop.admin.order.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -6,17 +6,15 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import pl.zaitis.shop.order.model.PaymentType;
+
 
 @Entity
+@Table(name = "payment")
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Payment {
+public class AdminPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
