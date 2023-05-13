@@ -11,6 +11,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "`order`")
 @Getter
+@Setter
 public class AdminOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,4 +41,7 @@ public class AdminOrder {
     private String phone;
     @OneToOne
     private AdminPayment payment;
+    @OneToMany
+    @JoinColumn(name = "orderId")
+    private List<AdminOrderLog> orderLogs;
 }
