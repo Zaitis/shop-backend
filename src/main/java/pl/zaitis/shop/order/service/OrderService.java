@@ -11,11 +11,14 @@ import pl.zaitis.shop.order.model.Order;
 import pl.zaitis.shop.order.model.Payment;
 import pl.zaitis.shop.order.model.Shipment;
 import pl.zaitis.shop.order.model.dto.OrderDto;
+import pl.zaitis.shop.order.model.dto.OrderListDto;
 import pl.zaitis.shop.order.model.dto.OrderSummary;
 import pl.zaitis.shop.order.repository.OrderRepository;
 import pl.zaitis.shop.order.repository.OrderRowRepository;
 import pl.zaitis.shop.order.repository.PaymentRepository;
 import pl.zaitis.shop.order.repository.ShipmentRepository;
+
+import java.util.List;
 
 import static pl.zaitis.shop.order.service.mapper.OrderMapper.createdNewOrder;
 import static pl.zaitis.shop.order.service.mapper.OrderMapper.createdOrderSummary;
@@ -72,5 +75,20 @@ public class OrderService {
                 .map(cartItem -> mapToOrderRowWithQuantity(id, cartItem))
                 .peek(orderRowRepository::save)
                 .toList();
+    }
+
+
+
+    public List<OrderListDto> getOrdersForCustomer(Long userId) {
+        return   mapToOrderListDto(orderRepository.findByUserId(userId));
+    }
+
+    private List<OrderListDto> mapToOrderListDto(List<Order> orders) {
+        return orders.stream()
+                .map(order -> OrderListDto.builder()
+                        .orderStatus(order.getOrderStatus())
+                        .placeDate(order.getPlaceDate())
+                        .grossValue(order.getGrossValue())
+                        .build()).toList();
     }
 }
