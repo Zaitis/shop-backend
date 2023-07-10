@@ -1,6 +1,7 @@
 package pl.zaitis.shop.order.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,8 @@ import pl.zaitis.shop.order.model.dto.OrderSummary;
 import pl.zaitis.shop.order.service.OrderService;
 import pl.zaitis.shop.order.service.PaymentService;
 import pl.zaitis.shop.order.service.ShipmentService;
+import pl.zaitis.shop.security.repository.UserRepository;
+import pl.zaitis.shop.security.repository.model.User;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,10 +24,12 @@ public class OrderController {
     private final OrderService orderService;
     private final ShipmentService shipmentService;
     private final PaymentService paymentService;
+    private final UserRepository userRepository;
 
     @PostMapping
-    public OrderSummary placeOrder(@RequestBody OrderDto orderDto) {
-        return orderService.placeOrder(orderDto);
+    public OrderSummary placeOrder(@RequestBody OrderDto orderDto, @AuthenticationPrincipal String name) {
+        User user =userRepository.findByUsername(name);
+        return orderService.placeOrder(orderDto, user.getId());
     }
 
     @GetMapping("/initData")

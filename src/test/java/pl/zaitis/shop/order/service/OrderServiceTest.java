@@ -59,13 +59,13 @@ class OrderServiceTest {
         //given
         OrderDto orderDto = createOrder();
         when(cartRepository.findById(any())).thenReturn(createCart());
-        when(shipmentRepository.findById(any())).thenReturn(createShipment());
+//        when(shipmentRepository.findById(any())).thenReturn(createShipment());
         when(paymentRepository.findById(any())).thenReturn(createPayment());
         when(orderRepository.save(any())).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
         when(emailSender.getUInstance()).thenReturn(new FakeEmailService());
 
         //when
-        OrderSummary orderSummary=orderService.placeOrder(orderDto);
+        OrderSummary orderSummary=orderService.placeOrder(orderDto, 1L);
         //then
         assertThat(orderSummary).isNotNull();
         assertThat(orderSummary.getStatus()).isEqualTo(OrderStatus.NEW);
@@ -86,12 +86,12 @@ class OrderServiceTest {
                 );
     }
 
-    private Optional<Shipment> createShipment() {
-        return Optional.of(Shipment.builder()
-                        .id(2L)
-                        .price((new BigDecimal("15.00")))
-                        .build());
-    }
+//    private Optional<Shipment> createShipment() {
+//        return Optional.of(Shipment.builder()
+//                .id(2L)
+//                .price((new BigDecimal("15.00")))
+//                .defaultShipment().build());
+//    }
 
     private Optional<Cart> createCart() {
         return Optional.of(Cart.builder()
