@@ -2,6 +2,7 @@ package pl.zaitis.shop.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -24,15 +25,15 @@ public class LoginController {
     private String secret;
 
     public LoginController(AuthenticationManager authenticationManager,
-                           @Value("{$jwt.expirationTime}") long expirationTime,
-                           @Value("{$jwt.secret}") String secret) {
+                           @Value("${jwt.expirationTime}") long expirationTime,
+                           @Value("${jwt.secret}") String secret) {
         this.authenticationManager = authenticationManager;
         this.expirationTime = expirationTime;
         this.secret = secret;
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginCredentials loginCredentials){
+    public Token login(@RequestBody LoginCredentials loginCredentials){
 
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -46,7 +47,7 @@ public class LoginController {
                 .withExpiresAt(new Date(System.currentTimeMillis()+ expirationTime))
                 .sign(Algorithm.HMAC256(secret));
 
-        return token;
+        return new Token(token);
     }
 
 
@@ -54,5 +55,12 @@ public class LoginController {
     private static class LoginCredentials {
         private String username;
         private String password;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private static class Token {
+        private  String token;
+
     }
 }
