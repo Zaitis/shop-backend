@@ -18,7 +18,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml -Pproduction
+        run: mvn -B package --file pom.xml
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
@@ -53,7 +53,8 @@ jobs:
           local-dir: ./
           server-dir: /home/shop-backend/
           protocol: ftp
-          command-options: '--spring.profiles.active=production'
+          env:
+            SPRING_PROFILES_ACTIVE: production
 
 
 
