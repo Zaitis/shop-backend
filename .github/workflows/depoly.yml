@@ -23,10 +23,10 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          MAIL_HOST: ${{secrets.MAIL_HOST}}
-          MAIL_USERNAME: ${{secrets.MAIL_USERNAME}}
-          MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
-          JWT_SECRET: ${{secrets.JWT_SECRET}}
+          MAIL_HOST: ${{ secrets.MAIL_HOST }}
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           SPRING_PROFILES_ACTIVE: production
 
 
