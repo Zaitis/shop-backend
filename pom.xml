@@ -104,7 +104,6 @@
 	</dependencies>
 
 
-
 	<build>
 		<plugins>
 			<plugin>
@@ -113,9 +112,6 @@
 				<configuration>
 					<excludes>
 						<exclude>
-							<profiles>
-								<profile>production</profile>
-							</profiles>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</exclude>
@@ -124,5 +120,6 @@
 			</plugin>
 		</plugins>
 	</build>
+
 
 </project>
