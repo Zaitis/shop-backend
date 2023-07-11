@@ -1,8 +1,27 @@
 
-# E-shop
+# Online Shop
 
-This project is demo e-commerce shop. I am still developing, this Spring Boot aplication.   You can check and test this project on swagger at
-http://zaitis.alwaysdata.net/swagger-ui/index.html
+Online Shop is a web application created with Java 17 and Spring Boot 3.0.4 on the backend, and [Angular](https://github.com/Zaitis/shop-frontend) on the frontend. It uses technologies such as Hibernate, Maven, JPA, JDBC/MySQL, Spring Security, JWT, Spring Boot Mail, Liquibase, Lombok, Commons, Slugify, Jsoup, and Apache Commons CSV. The application is divided into two main parts: an administrative page and a user interface. Furthermore, the application utilizes CI/CD tools such as GitHub Actions for automatic deployment to the server.
+
+## User
+
+The user interface implements features such as login and registration, browsing categories and products, adding comments to products, adding products to the shopping cart and making purchases. These functions are also available for unregistered users.
+
+
+## Administrator
+The administrative page allows you to manage the application by adding, removing and editing categories and products. The administrator has the ability to manage orders, export data to a file, display charts, as well as manage comments by accepting or deleting them.
+
+## Links
+
+### Live Application:
+http://zaitis.alwaysdata.net
+
+### API Documentation (Swagger):
+http://zaitis.alwaysdata.net/z/swagger-ui/index.html
+
+### Frontend (GitHub):
+https://github.com/Zaitis/shop-frontend
+
 ## Tech Stack
 
 * Java 17
@@ -25,18 +44,10 @@ http://zaitis.alwaysdata.net/swagger-ui/index.html
 If you have any question or feedback, please reach me at krzysztof@painm.pl
 
 
-## ToDo list:
-
-- Add frontend as an Angular application for visual testing.
-- Implement user account creation functionality.
-- Integrate Spring Security for authentication and authorization.
-- Set up a mailing system for sending emails to users.
-- Implement order processing functionality.
-- Integrate a payment gateway for online payment processing.
-
-
-
 ## Run Locally
+
+# NOT IMPLEMENTED YET....
+## Work in progress....
 
 ```bash
   git clone https://github.com/Zaitis/shop-backend
