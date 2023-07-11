@@ -38,6 +38,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      SPRING_PROFILES_ACTIVE: production
+
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@v2
@@ -53,8 +56,6 @@ jobs:
           local-dir: ./
           server-dir: /home/shop-backend/
           protocol: ftp
-          env:
-            SPRING_PROFILES_ACTIVE: production
 
 
 
