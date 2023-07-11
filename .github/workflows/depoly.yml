@@ -2,7 +2,7 @@ name: Java CI with Maven and Deploy to AlwaysData
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
