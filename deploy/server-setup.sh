@@ -38,6 +38,11 @@ fi
 # Add deploy user to www-data group for web directory access
 sudo usermod -a -G www-data deploy
 
+# Configure passwordless sudo for deploy user
+echo "Configuring passwordless sudo for deploy user..."
+echo "deploy ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/deploy
+sudo chmod 440 /etc/sudoers.d/deploy
+
 # Create application directories
 echo "Creating application directories..."
 # Ensure /var/www has proper permissions

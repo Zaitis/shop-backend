@@ -79,22 +79,48 @@ JWT_SECRET=your_jwt_secret_key
 ```
 
 ### Initial Server Setup
-1. SSH into your server:
+
+**Step 1: Set up the deploy user (Run this first as root or sudo user)**
+
+1. SSH into your server as root or a user with sudo privileges:
 ```bash
-ssh deploy@91.99.187.62
+ssh root@91.99.187.62
+# or
+ssh your_admin_user@91.99.187.62
 ```
 
-2. Run the server setup script:
+2. Download and run the deploy user setup script:
+```bash
+wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/setup-deploy-user.sh
+chmod +x setup-deploy-user.sh
+./setup-deploy-user.sh
+```
+
+**Step 2: Complete server setup**
+
+3. Run the full server setup script:
 ```bash
 wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/server-setup.sh
 chmod +x server-setup.sh
 ./server-setup.sh
 ```
 
-3. Configure SSL certificate:
+4. Configure SSL certificate:
 ```bash
 sudo certbot --nginx -d shop-backend.zaitis.dev
 ```
+
+**Step 3: Test the deploy user setup**
+
+5. Test that passwordless sudo is working:
+```bash
+su - deploy
+wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/test-deploy-user.sh
+chmod +x test-deploy-user.sh
+./test-deploy-user.sh
+```
+
+If the test passes, your server is ready for automated deployments!
 
 ### Automatic Deployment
 The application automatically deploys when you push to the main branch. The deployment workflow:
