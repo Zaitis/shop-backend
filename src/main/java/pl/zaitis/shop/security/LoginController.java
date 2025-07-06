@@ -30,8 +30,8 @@ public class LoginController {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
-    private long expirationTime;
-    private String secret;
+    private final long expirationTime;
+    private final String secret;
 
     public LoginController(AuthenticationManager authenticationManager,
                            UserRepository userRepository, @Value("${jwt.expirationTime}") long expirationTime,

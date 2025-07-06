@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailSimpleService implements EmailSender{
 
-    private final JavaMailSender mailSender;
+   // private final JavaMailSender mailSender;
+
+
+
 
     @Async
     @Override
@@ -21,7 +24,7 @@ public class EmailSimpleService implements EmailSender{
         message.setTo(to);
         message.setSubject(subject);
         message.setText(msg);
-        mailSender.send(message);
+    //    mailSender.send(message);
 
 
     }

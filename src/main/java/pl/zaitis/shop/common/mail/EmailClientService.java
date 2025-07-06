@@ -9,9 +9,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EmailClientService {
 
-    @Value("${app.email.sender}")
-    private String isFakeProp;
+//    @Value("${app.email.sender}")
+    private String isFakeProp = "fakeEmailService";
     private final Map<String,EmailSender> senderMap;
+
+
 
     public EmailSender getUInstance(){
         if(isFakeProp.equals("fakeEmailService")){

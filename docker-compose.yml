@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: shop-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: shop_backend
+      MYSQL_USER: shop_user
+      MYSQL_PASSWORD: shop_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./src/main/resources/database:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  shop-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shop-backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DATABASE_URL=jdbc:mysql://mysql:3306/shop_backend
+      - DATABASE_USER=shop_user
+      - DATABASE_PASSWORD=shop_password
+      - JWT_SECRET=mysecretkey
+      - MAIL_HOST=localhost
+      - MAIL_PORT=587
+      - MAIL_USERNAME=
+      - MAIL_PASSWORD=
+      - EMAIL_SENDER=fakeEmailService
+      - UPLOAD_DIR=/app/data/productImages/
+      - SERVER_PORT=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/productImages:/app/data/productImages
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  mysql_data: 

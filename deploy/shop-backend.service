@@ -1,0 +1,45 @@
+[Unit]
+Description=Shop Backend Spring Boot Application
+After=network.target mysql.service
+Wants=network.target
+
+[Service]
+Type=exec
+User=deploy
+Group=deploy
+WorkingDirectory=/var/www/shop-backend
+ExecStart=/var/www/shop-backend/deploy/start.sh
+ExecStop=/bin/kill -TERM $MAINPID
+Restart=always
+RestartSec=10
+
+# Environment variables
+Environment=SPRING_PROFILES_ACTIVE=production
+Environment=DATABASE_URL=jdbc:mysql://localhost:3306/shop_backend
+Environment=DATABASE_USER=shop_user
+Environment=DATABASE_PASSWORD=
+Environment=MAIL_HOST=
+Environment=MAIL_PORT=587
+Environment=MAIL_USERNAME=
+Environment=MAIL_PASSWORD=
+Environment=JWT_SECRET=
+Environment=SERVER_PORT=8080
+Environment=UPLOAD_DIR=/var/www/shop-backend/data/productImages/
+Environment=EMAIL_SENDER=webServiceEmailService
+Environment=CART_CLEANUP_CRON=0 */5 * * * *
+Environment=JWT_EXPIRATION_TIME=36000000
+
+# Security settings
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/var/www/shop-backend/data /var/log/shop-backend
+ProtectHome=yes
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=shop-backend
+
+[Install]
+WantedBy=multi-user.target 
