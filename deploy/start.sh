@@ -33,6 +33,26 @@ mkdir -p "$LOG_DIR"
 mkdir -p "$UPLOAD_DIR"
 mkdir -p "$(dirname "$PID_FILE")"
 
+# Find Java installation
+JAVA_HOME=${JAVA_HOME:-$(readlink -f /usr/bin/java | sed "s:bin/java::")}
+JAVA_BIN="$JAVA_HOME/bin/java"
+
+# Try alternative Java locations if not found
+if [ ! -f "$JAVA_BIN" ]; then
+    if [ -f "/usr/bin/java" ]; then
+        JAVA_BIN="/usr/bin/java"
+    elif [ -f "/usr/lib/jvm/java-17-openjdk-amd64/bin/java" ]; then
+        JAVA_BIN="/usr/lib/jvm/java-17-openjdk-amd64/bin/java"
+    else
+        echo "Error: Java not found. Please install Java 17."
+        exit 1
+    fi
+fi
+
+echo "Using Java: $JAVA_BIN"
+echo "Java version:"
+$JAVA_BIN -version
+
 # Check if jar file exists
 if [ ! -f "$JAR_FILE" ]; then
     echo "Error: JAR file not found at $JAR_FILE"
@@ -51,4 +71,5 @@ JAVA_OPTS="$JAVA_OPTS -Dlogging.file.path=$LOG_DIR"
 JAVA_OPTS="$JAVA_OPTS -Dlogging.file.name=$LOG_DIR/application.log"
 
 # Start the application
-exec java $JAVA_OPTS -jar "$JAR_FILE" 
+echo "Starting with command: $JAVA_BIN $JAVA_OPTS -jar $JAR_FILE"
+exec "$JAVA_BIN" $JAVA_OPTS -jar "$JAR_FILE" 

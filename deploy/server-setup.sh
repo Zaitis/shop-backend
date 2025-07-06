@@ -16,6 +16,16 @@ sudo apt-get upgrade -y
 echo "Installing Java 17..."
 sudo apt-get install -y openjdk-17-jdk
 
+# Verify Java installation and set JAVA_HOME
+echo "Verifying Java installation..."
+java -version
+JAVA_HOME_PATH=$(readlink -f /usr/bin/java | sed "s:bin/java::")
+echo "JAVA_HOME will be set to: $JAVA_HOME_PATH"
+
+# Add JAVA_HOME to system environment
+echo "export JAVA_HOME=$JAVA_HOME_PATH" | sudo tee -a /etc/environment
+echo "export PATH=\$PATH:\$JAVA_HOME/bin" | sudo tee -a /etc/environment
+
 # Install MySQL Server
 echo "Installing MySQL Server..."
 sudo apt-get install -y mysql-server
@@ -75,17 +85,64 @@ server {
     listen 80;
     server_name shop-backend.zaitis.dev;
 
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # Client max body size for file uploads
+    client_max_body_size 10M;
+
+    # Main application proxy
     location / {
         proxy_pass http://localhost:8080;
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_connect_timeout 300;
-        proxy_send_timeout 300;
-        proxy_read_timeout 300;
-        send_timeout 300;
+        proxy_set_header X-Forwarded-Host \$host;
+        proxy_set_header X-Forwarded-Port \$server_port;
+        
+        # Timeout settings
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+        
+        # Buffer settings
+        proxy_buffering on;
+        proxy_buffer_size 4k;
+        proxy_buffers 8 4k;
+        
+        # Handle WebSocket connections if needed
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
     }
+
+    # Static file serving for product images
+    location /api/images/ {
+        alias /var/www/shop-backend/data/productImages/;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    # Health check endpoint
+    location /actuator/health {
+        proxy_pass http://localhost:8080/actuator/health;
+        proxy_set_header Host \$host;
+        access_log off;
+    }
+
+    # Deny access to sensitive files
+    location ~ /\\.(?!well-known).* {
+        deny all;
+    }
+
+    # Logging
+    access_log /var/log/nginx/shop-backend.access.log;
+    error_log /var/log/nginx/shop-backend.error.log;
 }
 EOF
 

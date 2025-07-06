@@ -13,6 +13,10 @@ ExecStop=/bin/kill -TERM $MAINPID
 Restart=always
 RestartSec=10
 
+# Set PATH to include Java
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-17-openjdk-amd64/bin
+Environment=JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
 # Environment variables
 Environment=SPRING_PROFILES_ACTIVE=production
 Environment=DATABASE_URL=jdbc:mysql://localhost:3306/shop_backend

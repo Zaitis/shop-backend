@@ -105,14 +105,21 @@ chmod +x server-setup.sh
 ./server-setup.sh
 ```
 
-4. Configure SSL certificate:
+4. Configure nginx for your domain:
+```bash
+wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/configure-nginx.sh
+chmod +x configure-nginx.sh
+./configure-nginx.sh
+```
+
+5. Configure SSL certificate:
 ```bash
 sudo certbot --nginx -d shop-backend.zaitis.dev
 ```
 
 **Step 3: Test the deploy user setup**
 
-5. Test that passwordless sudo is working:
+6. Test that passwordless sudo is working:
 ```bash
 su - deploy
 wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/test-deploy-user.sh
@@ -121,6 +128,34 @@ chmod +x test-deploy-user.sh
 ```
 
 If the test passes, your server is ready for automated deployments!
+
+### Quick Setup for Existing Deployment
+
+If you already have your application deployed but need to configure nginx:
+
+```bash
+# SSH to your server
+ssh deploy@91.99.187.62
+
+# Configure nginx
+wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/configure-nginx.sh
+chmod +x configure-nginx.sh
+./configure-nginx.sh
+
+# Start your backend service
+sudo systemctl start shop-backend
+
+# Check if it's running
+sudo systemctl status shop-backend
+
+# Run comprehensive deployment check
+wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/check-deployment.sh
+chmod +x check-deployment.sh
+./check-deployment.sh
+
+# Install SSL certificate
+sudo certbot --nginx -d shop-backend.zaitis.dev
+```
 
 ### Automatic Deployment
 The application automatically deploys when you push to the main branch. The deployment workflow:
@@ -141,6 +176,60 @@ scp target/*.jar deploy@91.99.187.62:/var/www/shop-backend/
 # SSH to server and restart service
 ssh deploy@91.99.187.62
 sudo systemctl restart shop-backend
+```
+
+## Troubleshooting
+
+### 🆘 Common Issues
+
+#### 502 Bad Gateway Error
+
+If you see a 502 Bad Gateway error, your backend service isn't running. Here are the most common fixes:
+
+**1. Java not found error** (most common issue):
+```bash
+ssh deploy@91.99.187.62
+wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/fix-java-path.sh
+chmod +x fix-java-path.sh
+./fix-java-path.sh
+```
+
+**2. General troubleshooting**:
+```bash
+ssh deploy@91.99.187.62
+wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/troubleshoot-502.sh
+chmod +x troubleshoot-502.sh
+./troubleshoot-502.sh
+```
+
+**3. Quick service checks**:
+```bash
+# Check service status
+sudo systemctl status shop-backend
+
+# View real-time logs
+sudo journalctl -u shop-backend -f
+
+# Restart service
+sudo systemctl restart shop-backend
+```
+
+#### Service Won't Start
+
+If the service fails to start:
+```bash
+# Check detailed logs
+sudo journalctl -u shop-backend -n 50
+
+# Check if JAR file exists
+ls -la /var/www/shop-backend/*.jar
+
+# Test Java installation
+java -version
+
+# Manual start for debugging
+cd /var/www/shop-backend
+java -jar *.jar
 ```
 
 ## Local Development
@@ -271,38 +360,3 @@ If you have any questions or feedback, please reach me at krzysztof@painm.pl
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-```bash
-  git clone https://github.com/Zaitis/shop-backend
-```
-
-Open project in IDE. (InteliJ)
-
-
-Go to:
-
-```bash
-  src\main\java\pl\zaitis\shop
-```
-
-Run
-
-```bash
-  ShopApplication.main()
-```
-
-Open Browser, the application will be start:
-
-```bash
-  https://localhost:8080
-```
-
-If you want run and connect database you should make new locally database and change
-creditials in application.propertis: DATABASE_NAME, USERNAME, PASSWORD
-
-
-```bash
-  spring.datasource.url=jdbc:mysql://localhost:3306/DATABASE_NAME?useUnicode=true&serverTimezone=UTC
-spring.datasource.username= USERNAME
-spring.datasource.password= PASSWORD
-```
