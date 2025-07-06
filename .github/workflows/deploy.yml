@@ -58,21 +58,32 @@ jobs:
           script: |
             # Create application directory if it doesn't exist
             sudo mkdir -p /var/www/shop-backend
-            sudo chown deploy:deploy /var/www/shop-backend
+            sudo mkdir -p /var/www/shop-backend/deploy
+            sudo chown -R deploy:deploy /var/www/shop-backend
+            sudo chmod -R 755 /var/www/shop-backend
             
             # Create data directories
             sudo mkdir -p /var/www/shop-backend/data/productImages
             sudo chown -R deploy:deploy /var/www/shop-backend/data
+            sudo chmod -R 755 /var/www/shop-backend/data
             
             # Create logs directory
             sudo mkdir -p /var/log/shop-backend
             sudo chown deploy:deploy /var/log/shop-backend
+            sudo chmod 755 /var/log/shop-backend
             
             # Stop the service if it's running
             sudo systemctl stop shop-backend || true
             
             # Remove old jar files
             rm -f /var/www/shop-backend/*.jar
+            
+            # Ensure directory has proper permissions for SCP
+            sudo chown -R deploy:deploy /var/www/shop-backend
+            sudo chmod -R 755 /var/www/shop-backend
+            
+            # Ensure deploy user can write to the directory
+            sudo usermod -a -G www-data deploy
             
       - name: Copy JAR file to server
         uses: appleboy/scp-action@v0.1.7
@@ -83,6 +94,7 @@ jobs:
           port: 22
           source: "*.jar"
           target: "/var/www/shop-backend/"
+          overwrite: true
           
       - name: Copy deployment scripts
         uses: appleboy/scp-action@v0.1.7
@@ -93,6 +105,7 @@ jobs:
           port: 22
           source: "deploy/"
           target: "/var/www/shop-backend/"
+          overwrite: true
           
       - name: Start application
         uses: appleboy/ssh-action@v1.2.0

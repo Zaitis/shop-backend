@@ -35,15 +35,26 @@ if ! id "deploy" &>/dev/null; then
     sudo usermod -aG sudo deploy
 fi
 
+# Add deploy user to www-data group for web directory access
+sudo usermod -a -G www-data deploy
+
 # Create application directories
 echo "Creating application directories..."
+# Ensure /var/www has proper permissions
+sudo mkdir -p /var/www
+sudo chown root:www-data /var/www
+sudo chmod 755 /var/www
+
 sudo mkdir -p /var/www/shop-backend
+sudo mkdir -p /var/www/shop-backend/deploy
 sudo mkdir -p /var/www/shop-backend/data/productImages
 sudo mkdir -p /var/log/shop-backend
 
-# Set proper ownership
+# Set proper ownership and permissions
 sudo chown -R deploy:deploy /var/www/shop-backend
 sudo chown -R deploy:deploy /var/log/shop-backend
+sudo chmod -R 755 /var/www/shop-backend
+sudo chmod 755 /var/log/shop-backend
 
 # Configure MySQL
 echo "Configuring MySQL..."
