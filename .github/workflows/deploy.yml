@@ -48,7 +48,7 @@ jobs:
         with:
           name: shop-backend-jar
           
-      - name: Deploy to server
+      - name: Prepare server and copy files
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -59,7 +59,10 @@ jobs:
             # Stop the service if it's running
             sudo systemctl stop shop-backend || true
             
-            # Ensure directories exist and have proper permissions
+            # Create temporary directory for file transfer
+            mkdir -p /tmp/shop-backend-deploy
+            
+            # Ensure target directories exist and have proper permissions
             sudo mkdir -p /var/www/shop-backend/{deploy,data/productImages}
             sudo mkdir -p /var/log/shop-backend
             
@@ -80,7 +83,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           source: "*.jar"
-          target: "/var/www/shop-backend/"
+          target: "/tmp/shop-backend-deploy/"
           overwrite: true
           
       - name: Copy deployment scripts
@@ -91,8 +94,30 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           source: "deploy/"
-          target: "/var/www/shop-backend/"
+          target: "/tmp/shop-backend-deploy/"
           overwrite: true
+          
+      - name: Move files to final location
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          script: |
+            # Move JAR file to final location
+            mv /tmp/shop-backend-deploy/*.jar /var/www/shop-backend/
+            
+            # Move deployment scripts to final location
+            cp -r /tmp/shop-backend-deploy/deploy/* /var/www/shop-backend/deploy/
+            
+            # Clean up temporary directory
+            rm -rf /tmp/shop-backend-deploy
+            
+            # Ensure correct permissions
+            sudo chown -R deploy:deploy /var/www/shop-backend
+            sudo chmod -R 755 /var/www/shop-backend
+            sudo chmod +x /var/www/shop-backend/deploy/start.sh
           
       - name: Start application
         uses: appleboy/ssh-action@v1.2.0
