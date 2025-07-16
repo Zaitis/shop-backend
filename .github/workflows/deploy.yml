@@ -112,7 +112,9 @@ jobs:
             MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
             MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
             JWT_SECRET=${{ secrets.JWT_SECRET }}
+            JWT_EXPIRATION_TIME=36000000
             SPRING_LIQUIBASE_CHANGE_LOG=classpath:liquibase-changeLog.xml
+            CART_CLEANUP_CRON=0 */5 * * * *
             EOF
             
             # Secure the .env file
