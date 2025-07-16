@@ -94,7 +94,7 @@ jobs:
           target: "/var/www/shop-backend/"
           overwrite: true
           
-      - name: Set proper permissions and prepare for startup
+      - name: Create environment file and prepare application
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -102,6 +102,22 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
+            # Create .env file with secrets
+            cat > /var/www/shop-backend/.env << 'EOF'
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            DATABASE_USER=${{ secrets.DATABASE_USER }}
+            DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+            MAIL_HOST=${{ secrets.MAIL_HOST }}
+            MAIL_PORT=587
+            MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
+            MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            EOF
+            
+            # Secure the .env file
+            chmod 600 /var/www/shop-backend/.env
+            chown deploy:deploy /var/www/shop-backend/.env
+            
             # Ensure correct permissions after file transfer
             sudo chown -R deploy:deploy /var/www/shop-backend
             sudo chmod -R 755 /var/www/shop-backend
@@ -145,12 +161,4 @@ jobs:
             sleep 30
             
             # Check if application is responding
-            curl -f http://localhost:8080/actuator/health || echo "Health check failed"
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DATABASE_USER: ${{ secrets.DATABASE_USER }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          MAIL_HOST: ${{ secrets.MAIL_HOST }}
-          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }} 
+            curl -f http://localhost:8080/actuator/health || echo "Health check failed" 
