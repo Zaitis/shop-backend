@@ -96,6 +96,7 @@ jobs:
           script: |
             # Create .env file with secrets
             cat > /var/www/shop-backend/.env << 'EOF'
+            SPRING_PROFILES_ACTIVE=production
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             DATABASE_USER=${{ secrets.DATABASE_USER }}
             DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
@@ -107,6 +108,8 @@ jobs:
             JWT_EXPIRATION_TIME=36000000
             SPRING_LIQUIBASE_CHANGE_LOG=classpath:liquibase-changeLog.xml
             CART_CLEANUP_CRON=0 */5 * * * *
+            EMAIL_SENDER=webServiceEmailService
+            UPLOAD_DIR=/var/www/shop-backend/data/productImages/
             EOF
             
             # Secure the .env file
@@ -127,6 +130,10 @@ jobs:
               echo "ERROR: JAR file not found!"
               exit 1
             fi
+            
+            # Verify environment file is created
+            echo "Environment file contents (without sensitive data):"
+            cat /var/www/shop-backend/.env | sed 's/PASSWORD=.*/PASSWORD=***HIDDEN***/' | sed 's/SECRET=.*/SECRET=***HIDDEN***/'
           
       - name: Start application
         uses: appleboy/ssh-action@v1.2.0
@@ -149,9 +156,12 @@ jobs:
             WorkingDirectory=/var/www/shop-backend
             ExecStart=/usr/bin/java -jar /var/www/shop-backend/shop-0.0.1-SNAPSHOT.jar
             EnvironmentFile=/var/www/shop-backend/.env
+            Environment=SPRING_PROFILES_ACTIVE=production
             StandardOutput=journal
             StandardError=journal
             SyslogIdentifier=shop-backend
+            Restart=always
+            RestartSec=10
             
             [Install]
             WantedBy=multi-user.target
