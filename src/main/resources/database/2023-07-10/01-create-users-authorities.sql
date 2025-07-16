@@ -16,5 +16,5 @@ create table authorities (
 create unique index ix_auth_username on authorities (username,authority);
 --changeset zaitis:21
 insert into users (id, username, password, enabled)
-values (1, 'admin', '{bcrypt}$2a$10$upzXFsFUOClFRR69OMKF8eajGMRs0vhcSHqvNDKy9yfW45w7o9z6O', true);
+values (1, 'admin', '{bcrypt}$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', true);
 insert into authorities (username, authority) values ('admin','ROLE_ADMIN');

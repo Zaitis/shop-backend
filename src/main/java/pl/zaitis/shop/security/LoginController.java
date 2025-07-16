@@ -13,7 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,14 +30,17 @@ public class LoginController {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final long expirationTime;
     private final String secret;
 
     public LoginController(AuthenticationManager authenticationManager,
-                           UserRepository userRepository, @Value("${jwt.expirationTime}") long expirationTime,
+                           UserRepository userRepository, PasswordEncoder passwordEncoder,
+                           @Value("${jwt.expirationTime}") long expirationTime,
                            @Value("${jwt.secret}") String secret) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
         this.expirationTime = expirationTime;
         this.secret = secret;
     }
@@ -48,24 +51,22 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public Token login(@RequestBody @Valid RegisterCredentials registerCredentials) {
+    public Token register(@RequestBody @Valid RegisterCredentials registerCredentials) {
         if (!registerCredentials.getPassword().equals(registerCredentials.getRepeatPassword())) {
             throw new IllegalArgumentException("Passwords are not identical");
         }
         if (userRepository.existsByUsername(registerCredentials.getUsername())) {
-            throw new IllegalArgumentException("This mail is exists");
+            throw new IllegalArgumentException("This email already exists");
         }
         userRepository.save(User.builder()
                 .username(registerCredentials.getUsername())
-                .password("{bcrypt}" + new BCryptPasswordEncoder().encode(registerCredentials.getPassword()))
+                .password("{bcrypt}" + passwordEncoder.encode(registerCredentials.getPassword()))
                 .enabled(true)
                 .authorities(List.of(UserRole.ROLE_CUSTOMER))
                 .build());
         return authenticate(
                 registerCredentials.getUsername(),
                 registerCredentials.getPassword());
-
-
     }
 
 

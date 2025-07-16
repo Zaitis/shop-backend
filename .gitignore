@@ -4,8 +4,17 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-/deploy/*
+
+# Deployment and security sensitive files
+deploy/
+*.env
+.env*
 src/main/resources/application.properties
+
+# Logs and temporary files
+logs/
+*.log
+temp/
 
 ### STS ###
 .apt_generated

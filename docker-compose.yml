@@ -5,10 +5,10 @@ services:
     image: mysql:8.0
     container_name: shop-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: shop_backend
-      MYSQL_USER: shop_user
-      MYSQL_PASSWORD: shop_password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-shop_backend}
+      MYSQL_USER: ${MYSQL_USER:-shop_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-shop_password}
     ports:
       - "3306:3306"
     volumes:
@@ -29,17 +29,17 @@ services:
         condition: service_healthy
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - DATABASE_URL=jdbc:mysql://mysql:3306/shop_backend
-      - DATABASE_USER=shop_user
-      - DATABASE_PASSWORD=shop_password
-      - JWT_SECRET=mysecretkey
-      - MAIL_HOST=localhost
-      - MAIL_PORT=587
-      - MAIL_USERNAME=
-      - MAIL_PASSWORD=
-      - EMAIL_SENDER=fakeEmailService
-      - UPLOAD_DIR=/app/data/productImages/
-      - SERVER_PORT=8080
+      - DATABASE_URL=${DATABASE_URL:-jdbc:mysql://mysql:3306/shop_backend}
+      - DATABASE_USER=${DATABASE_USER:-shop_user}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-shop_password}
+      - JWT_SECRET=${JWT_SECRET:-mysecretkey}
+      - MAIL_HOST=${MAIL_HOST:-localhost}
+      - MAIL_PORT=${MAIL_PORT:-587}
+      - MAIL_USERNAME=${MAIL_USERNAME:-}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-}
+      - EMAIL_SENDER=${EMAIL_SENDER:-fakeEmailService}
+      - UPLOAD_DIR=${UPLOAD_DIR:-/app/data/productImages/}
+      - SERVER_PORT=${SERVER_PORT:-8080}
     ports:
       - "8080:8080"
     volumes:

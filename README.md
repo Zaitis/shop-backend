@@ -23,10 +23,10 @@ Online Shop is a web application created with Java 17 and Spring Boot 3.0.4 on t
 ## Links
 
 ### Live Application:
-https://shop-backend.zaitis.dev
+https://your.domain.com
 
 ### API Documentation (Swagger):
-https://shop-backend.zaitis.dev/swagger-ui/index.html
+https://your.domain.com/swagger-ui/index.html
 
 ### Frontend (GitHub):
 https://github.com/Zaitis/shop-frontend
@@ -66,7 +66,7 @@ https://github.com/Zaitis/shop-frontend
 Configure the following secrets in your GitHub repository:
 
 ```
-SERVER_HOST=91.99.187.62
+SERVER_HOST=your.server.ip.address
 SERVER_USERNAME=deploy
 SERVER_PASSWORD=your_deploy_password
 DATABASE_URL=jdbc:mysql://localhost:3306/shop_backend
@@ -84,47 +84,54 @@ JWT_SECRET=your_jwt_secret_key
 
 1. SSH into your server as root or a user with sudo privileges:
 ```bash
-ssh root@91.99.187.62
+ssh root@your.server.ip.address
 # or
-ssh your_admin_user@91.99.187.62
+ssh your_admin_user@your.server.ip.address
 ```
 
-2. Download and run the deploy user setup script:
+2. Set up the deploy user:
 ```bash
-wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/setup-deploy-user.sh
-chmod +x setup-deploy-user.sh
-./setup-deploy-user.sh
+# Create deploy user
+sudo adduser deploy
+sudo usermod -aG sudo deploy
+
+# Set up SSH keys for deploy user
+sudo mkdir -p /home/deploy/.ssh
+sudo chown deploy:deploy /home/deploy/.ssh
+sudo chmod 700 /home/deploy/.ssh
 ```
 
 **Step 2: Complete server setup**
 
-3. Run the full server setup script:
+3. Install required software:
 ```bash
-wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/server-setup.sh
-chmod +x server-setup.sh
-./server-setup.sh
+# Install Java 17
+sudo apt-get update
+sudo apt-get install -y openjdk-17-jdk
+
+# Install MySQL
+sudo apt-get install -y mysql-server
+
+# Install Nginx
+sudo apt-get install -y nginx
+
+# Install Certbot for SSL
+sudo apt-get install -y certbot python3-certbot-nginx
 ```
 
 4. Configure nginx for your domain:
 ```bash
-wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/configure-nginx.sh
-chmod +x configure-nginx.sh
-./configure-nginx.sh
+# Create nginx configuration for your domain
+sudo nano /etc/nginx/sites-available/your-domain
+
+# Enable the site
+sudo ln -s /etc/nginx/sites-available/your-domain /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
 ```
 
 5. Configure SSL certificate:
 ```bash
-sudo certbot --nginx -d shop-backend.zaitis.dev
-```
-
-**Step 3: Test the deploy user setup**
-
-6. Test that passwordless sudo is working:
-```bash
-su - deploy
-wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/test-deploy-user.sh
-chmod +x test-deploy-user.sh
-./test-deploy-user.sh
+sudo certbot --nginx -d your.domain.com
 ```
 
 If the test passes, your server is ready for automated deployments!
@@ -135,12 +142,10 @@ If you already have your application deployed but need to configure nginx:
 
 ```bash
 # SSH to your server
-ssh deploy@91.99.187.62
+ssh deploy@your.server.ip.address
 
-# Configure nginx
-wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/configure-nginx.sh
-chmod +x configure-nginx.sh
-./configure-nginx.sh
+# Configure nginx (customize for your domain)
+# Configure nginx for your domain and SSL
 
 # Start your backend service
 sudo systemctl start shop-backend
@@ -148,13 +153,8 @@ sudo systemctl start shop-backend
 # Check if it's running
 sudo systemctl status shop-backend
 
-# Run comprehensive deployment check
-wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/check-deployment.sh
-chmod +x check-deployment.sh
-./check-deployment.sh
-
-# Install SSL certificate
-sudo certbot --nginx -d shop-backend.zaitis.dev
+# Install SSL certificate for your domain
+sudo certbot --nginx -d your.domain.com
 ```
 
 ### Automatic Deployment
@@ -171,10 +171,10 @@ If you need to deploy manually:
 mvn clean package -DskipTests
 
 # Copy to server
-scp target/*.jar deploy@91.99.187.62:/var/www/shop-backend/
+scp target/*.jar deploy@your.server.ip.address:/var/www/shop-backend/
 
 # SSH to server and restart service
-ssh deploy@91.99.187.62
+ssh deploy@your.server.ip.address
 sudo systemctl restart shop-backend
 ```
 
@@ -188,18 +188,32 @@ If you see a 502 Bad Gateway error, your backend service isn't running. Here are
 
 **1. Java not found error** (most common issue):
 ```bash
-ssh deploy@91.99.187.62
-wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/fix-java-path.sh
-chmod +x fix-java-path.sh
-./fix-java-path.sh
+ssh deploy@your.server.ip.address
+
+# Check if Java is installed
+java -version
+
+# If not installed, install Java 17
+sudo apt-get update
+sudo apt-get install -y openjdk-17-jdk
+
+# Set JAVA_HOME
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> ~/.bashrc
 ```
 
 **2. General troubleshooting**:
 ```bash
-ssh deploy@91.99.187.62
-wget https://raw.githubusercontent.com/yourusername/shop-backend/main/deploy/troubleshoot-502.sh
-chmod +x troubleshoot-502.sh
-./troubleshoot-502.sh
+ssh deploy@your.server.ip.address
+
+# Check service status
+sudo systemctl status shop-backend
+
+# Check logs
+sudo journalctl -u shop-backend -f
+
+# Check if application is running
+curl -f http://localhost:8080/actuator/health
 ```
 
 **3. Quick service checks**:
@@ -290,7 +304,7 @@ mvn spring-boot:run -Dspring-boot.run.profiles=dev
 
 Once the application is running, you can access the API documentation at:
 - Local: `http://localhost:8080/swagger-ui/index.html`
-- Production: `https://shop-backend.zaitis.dev/swagger-ui/index.html`
+- Production: `https://your.domain.com/swagger-ui/index.html`
 
 ## Health Checks
 
