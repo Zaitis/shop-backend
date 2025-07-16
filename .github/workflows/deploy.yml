@@ -60,7 +60,7 @@ jobs:
             sudo systemctl stop shop-backend || true
             
             # Ensure target directories exist and have proper permissions
-            sudo mkdir -p /var/www/shop-backend/{deploy,data/productImages}
+            sudo mkdir -p /var/www/shop-backend/data/productImages
             sudo mkdir -p /var/log/shop-backend
             
             # Set ownership and permissions
@@ -83,16 +83,8 @@ jobs:
           target: "/var/www/shop-backend/"
           overwrite: true
           
-      - name: Copy deployment scripts directly to destination
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          port: 22
-          source: "deploy/"
-          target: "/var/www/shop-backend/"
-          overwrite: true
+# Deployment scripts have been removed for security reasons
+      # The systemd service file will be created directly in the workflow
           
       - name: Create environment file and prepare application
         uses: appleboy/ssh-action@v1.2.0
@@ -125,9 +117,6 @@ jobs:
             sudo chown -R deploy:deploy /var/www/shop-backend
             sudo chmod -R 755 /var/www/shop-backend
             
-            # Make deployment script executable
-            chmod +x /var/www/shop-backend/deploy/start.sh
-            
             # Verify JAR file exists and is not corrupted
             if [ -f /var/www/shop-backend/*.jar ]; then
               echo "JAR file found:"
@@ -147,8 +136,26 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
-            # Copy systemd service file
-            sudo cp /var/www/shop-backend/deploy/shop-backend.service /etc/systemd/system/
+            # Create systemd service file directly
+            sudo tee /etc/systemd/system/shop-backend.service > /dev/null <<EOF
+            [Unit]
+            Description=Shop Backend Application
+            After=network.target mysql.service
+            
+            [Service]
+            Type=simple
+            User=deploy
+            Group=deploy
+            WorkingDirectory=/var/www/shop-backend
+            ExecStart=/usr/bin/java -jar /var/www/shop-backend/shop-0.0.1-SNAPSHOT.jar
+            EnvironmentFile=/var/www/shop-backend/.env
+            StandardOutput=journal
+            StandardError=journal
+            SyslogIdentifier=shop-backend
+            
+            [Install]
+            WantedBy=multi-user.target
+            EOF
             
             # Reload systemd and enable service
             sudo systemctl daemon-reload
