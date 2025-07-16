@@ -31,6 +31,17 @@ fi
 
 echo "✅ JAR file is valid"
 
+# Check if Liquibase changelog exists in JAR
+echo "🔍 Checking Liquibase changelog in JAR..."
+if unzip -l "$JAR_FILE" | grep -q "BOOT-INF/classes/liquibase-changeLog.xml"; then
+    echo "✅ Liquibase changelog found in JAR"
+else
+    echo "❌ ERROR: Liquibase changelog not found in JAR!"
+    echo "   Expected: BOOT-INF/classes/liquibase-changeLog.xml"
+    echo "   Contents:"
+    unzip -l "$JAR_FILE" | grep -i liquibase || echo "   No Liquibase files found"
+fi
+
 # Check deployment scripts
 REQUIRED_FILES=(
     "/var/www/shop-backend/deploy/start.sh"
@@ -52,6 +63,30 @@ if [ ! -x "/var/www/shop-backend/deploy/start.sh" ]; then
 fi
 
 echo "✅ start.sh is executable"
+
+# Check .env file
+if [ ! -f "/var/www/shop-backend/.env" ]; then
+    echo "❌ ERROR: .env file not found!"
+    exit 1
+fi
+
+echo "✅ .env file exists"
+echo "   Permissions: $(ls -l /var/www/shop-backend/.env)"
+
+# Check environment variables in .env file
+if grep -q "DATABASE_URL" /var/www/shop-backend/.env && 
+   grep -q "DATABASE_USER" /var/www/shop-backend/.env && 
+   grep -q "DATABASE_PASSWORD" /var/www/shop-backend/.env; then
+    echo "✅ Database environment variables found in .env"
+else
+    echo "❌ ERROR: Missing database environment variables in .env file"
+fi
+
+if grep -q "SPRING_LIQUIBASE_CHANGE_LOG" /var/www/shop-backend/.env; then
+    echo "✅ Liquibase configuration found in .env"
+else
+    echo "⚠️  Liquibase configuration not found in .env (may use default from application.properties)"
+fi
 
 # Check service status
 SERVICE_STATUS=$(systemctl is-active shop-backend 2>/dev/null || echo "inactive")
