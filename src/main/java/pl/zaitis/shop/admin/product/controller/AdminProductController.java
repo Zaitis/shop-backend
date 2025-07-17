@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static pl.zaitis.shop.admin.common.utils.SlugfyUtils.slugifySlugName;
 
@@ -71,11 +72,17 @@ public class AdminProductController {
 
     @GetMapping("/data/productImage/{filename}")
     public ResponseEntity<Resource> serveFiles(@PathVariable String filename) throws IOException {
-       Resource resource =adminProductImageService.serveFiles(filename);
+       try {
+           Resource resource = adminProductImageService.serveFiles(filename);
 
-       return ResponseEntity.ok()
-               .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(Path.of(filename)))
-               .body(resource);
+           String contentType = Files.probeContentType(Paths.get(resource.getURI()));
+           
+           return ResponseEntity.ok()
+                   .header(HttpHeaders.CONTENT_TYPE, contentType != null ? contentType : "application/octet-stream")
+                   .body(resource);
+       } catch (Exception e) {
+           throw new RuntimeException("Failed to serve file: " + filename, e);
+       }
     }
 
     private  AdminProduct mapAdminProduct(AdminProductDto adminProductDto, Long id) {

@@ -109,7 +109,7 @@ jobs:
             SPRING_LIQUIBASE_CHANGE_LOG=classpath:liquibase-changeLog.xml
             CART_CLEANUP_CRON=0 */5 * * * *
             EMAIL_SENDER=webServiceEmailService
-            UPLOAD_DIR=/var/www/shop-backend/data/productImages/
+            UPLOAD_DIR=data/productImages/
             EOF
             
             # Secure the .env file
